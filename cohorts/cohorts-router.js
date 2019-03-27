@@ -29,7 +29,7 @@ router.get("/:id", (req, res) => {
 
 //- `[POST] /api/cohorts`
 router.post("/", (req, res) => {
-  console.log(req.body);
+  //   console.log(req.body);
   db("cohorts")
     .insert(req.body)
     .then(ids => {
@@ -48,6 +48,25 @@ router.post("/", (req, res) => {
 //- `[GET] /api/cohorts/:id/students`
 
 //- `[PUT] /api/cohorts/:id`
+router.put("/:id", async (req, res) => {
+  try {
+    const count = await db("cohorts")
+      .where({ id: req.params.id })
+      .update(req.body);
+
+    if (count > 0) {
+      const cohort = await db("cohorts")
+        .where({ id: req.params.id })
+        .first();
+
+      res.status(200).json(cohort);
+    } else {
+      res.status(404).json({ message: "Cohorts not found" });
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 //- `[DELETE] /api/cohorts/:id`
 router.delete("/:id", (req, res) => {
