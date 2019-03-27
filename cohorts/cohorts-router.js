@@ -26,3 +26,22 @@ router.get("/:id", (req, res) => {
     .then(cohort => res.status(200).json(cohort))
     .catch(err => res.status(500).json(error));
 });
+
+//- `[POST] /api/cohorts`
+router.post("/", (req, res) => {
+  console.log(req.body);
+  db("cohorts")
+    .insert(req.body)
+    .then(ids => {
+      const id = ids[0];
+      db("cohorts")
+        .where({ id })
+        // .first()
+        .then(ids => {
+          res.status(201).json(ids);
+        });
+    })
+    .catch(error => {
+      res.status(500).json(error);
+    });
+});
