@@ -4,7 +4,7 @@ const server = require("./server.js");
 const knex = require("knex");
 
 const knexConfig = require("./knexfile.js");
-const db = knex(knexConfig);
+const db = knex(knexConfig.development);
 
 const port = 5000;
 
