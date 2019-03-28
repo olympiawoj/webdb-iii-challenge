@@ -45,19 +45,15 @@ router.post("/", (req, res) => {
 });
 //- `[GET] /api/cohorts/:id/students`
 //return all students w cohort for specified cohort id
-router.get(":id/students", async (req, res) => {
+router.get("/:id/students", async (req, res) => {
   console.log(req.params);
   try {
-    const cohorts = await db("cohorts").where({ id: req.params.id });
-
-    if (cohorts) {
-      const students = await db("students").where({ cohort_id: id });
-      res.status(200).json(students);
-    } else {
-      res.status(404).json({ message: "No students found in  cohort" });
-    }
+    const students = await db("students").where({ cohort_id: req.params.id });
+    res.status(200).json(students);
   } catch {
-    res.status(500).json({ message, error });
+    res
+      .status(500)
+      .json({ message: "You have an error getting students by cohort id" });
   }
 });
 //OR do another db call - and set cohort_id = id
