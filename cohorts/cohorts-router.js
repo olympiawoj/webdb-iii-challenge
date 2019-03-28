@@ -15,8 +15,6 @@ router.get("/", (req, res) => {
     .catch(err => res.status(500).json(error));
 });
 
-module.exports = router;
-
 //- `[GET] /api/cohorts/:id`
 router.get("/:id", (req, res) => {
   console.log(req.params);
@@ -46,6 +44,23 @@ router.post("/", (req, res) => {
     });
 });
 //- `[GET] /api/cohorts/:id/students`
+//return all students w cohort for specified cohort id
+router.get(":id/students", async (req, res) => {
+  console.log(req.params);
+  try {
+    const cohorts = await db("cohorts").where({ id: req.params.id });
+
+    if (cohorts) {
+      const students = await db("students").where({ cohort_id: id });
+      res.status(200).json(students);
+    } else {
+      res.status(404).json({ message: "No students found in  cohort" });
+    }
+  } catch {
+    res.status(500).json({ message, error });
+  }
+});
+//OR do another db call - and set cohort_id = id
 
 //- `[PUT] /api/cohorts/:id`
 router.put("/:id", async (req, res) => {
@@ -83,3 +98,5 @@ router.delete("/:id", (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 });
+
+module.exports = router;
